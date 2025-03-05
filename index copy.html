@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        input, button {
+            width: 96%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .alert {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+    </style>
+    <title>Gerenciamento de Orçamentos</title>        
+</head>
+<body>
+
+    <div class="container">
+        <h2>Gerenciamento de Orçamentos</h2>
+
+        <!-- Buscar todos os orçamentos -->
+        <button onclick="getAllOrcamentos()">Buscar Todos os Orçamentos</button>
+        
+        <!-- Criar novo orçamento -->
+        <h3>Criar Novo Orçamento</h3>
+        <input type="text" id="orcamentoDescricao" placeholder="Descrição do orçamento">
+        <input type="number" id="orcamentoValorEstimado" placeholder="Valor Estimado">
+        <input type="number" id="orcamentoPrazoDias" placeholder="Prazo em Dias">
+        <input type="text" id="orcamentoCliente" placeholder="Cliente">
+        <input type="text" id="orcamentoStatus" placeholder="Status">
+        <button onclick="createOrcamento()">Criar Orçamento</button>
+        
+        <!-- Buscar orçamento pelo ID -->
+        <h3>Buscar Orçamento por ID</h3>
+        <input type="text" id="orcamentoId" placeholder="ID do orçamento">
+        <button onclick="getOrcamentoById()">Buscar Orçamento</button>
+        
+        <!-- Atualizar orçamento -->
+        <h3>Atualizar Orçamento</h3>
+        <input type="text" id="orcamentoIdUpdate" placeholder="ID do orçamento" oninput="fetchOrcamentoForUpdate()">
+        <input type="text" id="orcamentoDescricaoUpdate" placeholder="Nova descrição">
+        <input type="number" id="orcamentoValorEstimadoUpdate" placeholder="Novo valor estimado">
+        <input type="number" id="orcamentoPrazoDiasUpdate" placeholder="Novo prazo em dias">
+        <input type="text" id="orcamentoClienteUpdate" placeholder="Novo cliente">
+        <input type="text" id="orcamentoStatusUpdate" placeholder="Novo status">
+        <button onclick="updateOrcamento()">Atualizar Orçamento</button>
+
+        <!-- Excluir orçamento -->
+        <h3>Excluir Orçamento</h3>
+        <input type="text" id="orcamentoIdDelete" placeholder="ID do orçamento a excluir">
+        <button onclick="deleteOrcamento()">Excluir Orçamento</button>
+
+        <!-- Resultados -->
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // Função para buscar todos os orçamentos
+        function getAllOrcamentos() {
+            fetch('https://public.franciscosensaulas.com/api/v1/trabalho/orcamentos-detalhados')
+                .then(response => response.json())
+                .then(data => {
+                    let resultContent = '<h3>Todos os Orçamentos:</h3>';
+                    data.forEach(item => {
+                        resultContent += `
+                            <p>ID: ${item.id} - Descrição: ${item.descricao} - Valor Estimado: R$ ${item.valorEstimado} - Prazo: ${item.prazoDias} dias - Cliente: ${item.cliente} - Status: ${item.status}</p>
+                        `;
+                    });
+                    document.getElementById('result').innerHTML = resultContent;
+                })
+                .catch(error => console.error('Erro ao buscar orçamentos:', error));
+        }
+
+        // Função para buscar um orçamento pelo ID
+        function getOrcamentoById() {
+            const id = document.getElementById('orcamentoId').value;
+            if (!id) {
+                alert("Por favor, insira um ID.");
+                return;
+            }
+
+            fetch(`https://public.franciscosensaulas.com/api/v1/trabalho/orcamentos-detalhados/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.id) {
+                        document.getElementById('result').innerHTML = `
+                            <p>ID: ${data.id}</p>
+                            <p>Descrição: ${data.descricao}</p>
+                            <p>Valor Estimado: R$ ${data.valorEstimado}</p>
+                            <p>Prazos: ${data.prazoDias} dias</p>
+                            <p>Cliente: ${data.cliente}</p>
+                            <p>Status: ${data.status}</p>
+                        `;
+                    } else {
+                        document.getElementById('result').innerHTML = 'Orçamento não encontrado.';
+                    }
+                })
+                .catch(error => console.error('Erro ao buscar orçamento:', error));
+        }
+
+        // Função para buscar orçamento para atualizar em tempo real
+        function fetchOrcamentoForUpdate() {
+            const id = document.getElementById('orcamentoIdUpdate').value;
+
+            if (!id) {
+                document.getElementById('orcamentoDescricaoUpdate').value = '';
+                document.getElementById('orcamentoValorEstimadoUpdate').value = '';
+                document.getElementById('orcamentoPrazoDiasUpdate').value = '';
+                document.getElementById('orcamentoClienteUpdate').value = '';
+                document.getElementById('orcamentoStatusUpdate').value = '';
+                return;
+            }
+
+            fetch(`https://public.franciscosensaulas.com/api/v1/trabalho/orcamentos-detalhados/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.id) {
+                        document.getElementById('orcamentoDescricaoUpdate').value = data.descricao;
+                        document.getElementById('orcamentoValorEstimadoUpdate').value = data.valorEstimado;
+                        document.getElementById('orcamentoPrazoDiasUpdate').value = data.prazoDias;
+                        document.getElementById('orcamentoClienteUpdate').value = data.cliente;
+                        document.getElementById('orcamentoStatusUpdate').value = data.status;
+                    } else {
+                        alert('Orçamento não encontrado!');
+                        document.getElementById('orcamentoDescricaoUpdate').value = '';
+                        document.getElementById('orcamentoValorEstimadoUpdate').value = '';
+                        document.getElementById('orcamentoPrazoDiasUpdate').value = '';
+                        document.getElementById('orcamentoClienteUpdate').value = '';
+                        document.getElementById('orcamentoStatusUpdate').value = '';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar orçamento:', error);
+                    document.getElementById('orcamentoDescricaoUpdate').value = '';
+                    document.getElementById('orcamentoValorEstimadoUpdate').value = '';
+                    document.getElementById('orcamentoPrazoDiasUpdate').value = '';
+                    document.getElementById('orcamentoClienteUpdate').value = '';
+                    document.getElementById('orcamentoStatusUpdate').value = '';
+                });
+        }
+
+        // Função para atualizar um orçamento
+        function updateOrcamento() {
+            const id = document.getElementById('orcamentoIdUpdate').value;
+            const descricao = document.getElementById('orcamentoDescricaoUpdate').value;
+            const valorEstimado = parseFloat(document.getElementById('orcamentoValorEstimadoUpdate').value.replace(',', '.'));
+            const prazoDias = document.getElementById('orcamentoPrazoDiasUpdate').value;
+            const cliente = document.getElementById('orcamentoClienteUpdate').value.trim();
+            const status = document.getElementById('orcamentoStatusUpdate').value.trim();
+
+            if (!id || !descricao || isNaN(valorEstimado) || !prazoDias || !cliente || !status) {
+                alert("Por favor, preencha todos os campos corretamente.");
+                return;
+            }
+
+            const data = {
+                descricao: descricao,
+                valorEstimado: valorEstimado,
+                prazoDias: prazoDias,
+                cliente: cliente,
+                status: status
+            };
+
+            fetch(`https://public.franciscosensaulas.com/api/v1/trabalho/orcamentos-detalhados/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.id) {
+                    document.getElementById('result').innerHTML = '<div class="alert success">Orçamento atualizado com sucesso!</div>';
+                } else {
+                    document.getElementById('result').innerHTML = '<div class="alert">Erro ao atualizar orçamento.</div>';
+                }
+            })
+            .catch(error => console.error('Erro ao atualizar orçamento:', error));
+        }
+
+        // Função para excluir um orçamento
+        function deleteOrcamento() {
+            const id = document.getElementById('orcamentoIdDelete').value;
+
+            if (!id) {
+                alert("Por favor, insira um ID.");
+                return;
+            }
+
+            fetch(`https://public.franciscosensaulas.com/api/v1/trabalho/orcamentos-detalhados/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('result').innerHTML = '<div class="alert success">Orçamento excluído com sucesso!</div>';
+                } else {
+                    document.getElementById('result').innerHTML = '<div class="alert">Erro ao excluir orçamento. Verifique o ID.</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao excluir orçamento:', error);
+                document.getElementById('result').innerHTML = '<div class="alert">Erro ao excluir orçamento.</div>';
+            });
+        }
+
+        // Função para criar um novo orçamento
+        function createOrcamento() {
+            const descricao = document.getElementById('orcamentoDescricao').value;
+            const valorEstimado = parseFloat(document.getElementById('orcamentoValorEstimado').value.replace(',', '.'));
+            const prazoDias = document.getElementById('orcamentoPrazoDias').value;
+            const cliente = document.getElementById('orcamentoCliente').value.trim();
+            const status = document.getElementById('orcamentoStatus').value.trim();
+
+            if (!descricao || isNaN(valorEstimado) || !prazoDias || !cliente || !status) {
+                alert("Por favor, preencha todos os campos corretamente.");
+                return;
+            }
+
+            const data = {
+                descricao: descricao,
+                valorEstimado: valorEstimado,
+                prazoDias: prazoDias,
+                cliente: cliente,
+                status: status
+            };
+
+            fetch('https://public.franciscosensaulas.com/api/v1/trabalho/orcamentos-detalhados', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.id) {
+                    document.getElementById('result').innerHTML = '<div class="alert success">Orçamento criado com sucesso!</div>';
+                } else {
+                    document.getElementById('result').innerHTML = '<div class="alert">Erro ao criar orçamento.</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao criar orçamento:', error);
+                document.getElementById('result').innerHTML = '<div class="alert">Erro ao criar orçamento. Tente novamente mais tarde.</div>';
+            });
+        }
+    </script>
+
+</body>
+</html>

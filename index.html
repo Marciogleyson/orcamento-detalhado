@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilos/geral-style.css">
+    <title>Página com Menu Hambúrguer</title>
+   
+</head>
+
+<body>
+
+    <!-- Header com menu hambúrguer -->
+    <header>
+        <div class="logo">Proway Empresa</div>
+        <button class="menu-btn" onclick="toggleMenu()">&#9776;</button>
+    </header>
+
+    <!-- Menu lateral -->
+    <div class="menu" id="menu">
+        <a href="obtem-orcamento.html">Obtem os Orçamentos</a>
+        <a href="criar-orcamento.html">Criar Novo Orçamento</a>
+        <a href="buscar-orcamento-id.html">Buscar Orçamento por ID</a>
+        <a href="atualizar-orcamento.html">Atualizar Orçamento</a>
+        <a href="excluir-orcamento.html">Excluir Orçamento</a>
+    </div>
+
+     <!-- Slider -->
+     <div class="slider">
+        <div class="slides">
+            <div class="slide">
+                <img src="https://cursinhoparamedicina.com.br/wp-content/uploads/2022/10/Paisagem-1.jpg" alt="Imagem 1">
+            </div>
+            <div class="slide">
+                <img src="https://dus6dayednven.cloudfront.net/app/uploads/2021/05/3.Nico-Ferreyra.jpg" alt="Imagem 2">
+            </div>
+            <div class="slide">
+                <img src="https://cursinhoparamedicina.com.br/wp-content/uploads/2024/07/Conceito-de-paisagem-na-Geografia-e-seus-elementos.jpg" alt="Imagem 3">
+            </div>
+            <div class="slide">
+                <img src="https://cdn.awsli.com.br/2500x2500/2045/2045488/produto/198266364/kit-quadros-mosaico-paisagem-ponta-canoa-rio-pinheiro-barco-9852dfc5.jpg" alt="Imagem 4">
+            </div>
+        </div>
+        <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="next" onclick="moveSlide(1)">&#10095;</button>
+    </div>
+
+
+     <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Marcio Ramos. Todos os direitos reservados.</p>
+    <p>
+      <a href="#">Sobre</a>
+      <a href="#">Política de Privacidade</a>
+      <a href="mailto:email@provedor.com.br?subject=Assunto do email&cc=copia@provedor.com.br&bcc=copiaoculta@provedor.com.br&body=Conteúdo do email que será preenchido automaticamente">Contato</a>
+    </p>
+  </footer>
+
+    <script src="scripts/menu-hamburguer.js"></script>
+    <script src="scripts/slider.js"></script>
+</body>
+
+</html>

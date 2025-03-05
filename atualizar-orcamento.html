@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilos/footer-style.css">
+    <link rel="stylesheet" href="estilos/atualiza-orcamento-style.css">
+    <title>Atualizar Orçamento</title>
+   
+</head>
+<body>
+
+    <header>
+        <a href="index.html">Home</a>
+    </header>
+
+    <main>
+        <h1>Atualizar Orçamento</h1>
+        <!-- Formulário para atualização do orçamento -->
+        <form id="orcamentoForm" onsubmit="event.preventDefault(); updateOrcamento();">
+            <label for="orcamentoIdUpdate">ID do Orçamento:</label>
+            <input type="text" id="orcamentoIdUpdate" placeholder="Digite o ID do orçamento" required oninput="buscarOrcamento()">
+        
+            <label for="orcamentoDescricaoUpdate">Descrição:</label>
+            <input type="text" id="orcamentoDescricaoUpdate" placeholder="Descrição do orçamento" required>
+        
+            <label for="orcamentoValorEstimadoUpdate">Valor Estimado:</label>
+            <input type="number" id="orcamentoValorEstimadoUpdate" placeholder="Digite o valor estimado" required>
+        
+            <label for="orcamentoPrazoDiasUpdate">Prazo (dias):</label>
+            <input type="number" id="orcamentoPrazoDiasUpdate" placeholder="Digite o prazo estimado" required>
+        
+            <label for="orcamentoClienteUpdate">Cliente:</label>
+            <input type="text" id="orcamentoClienteUpdate" placeholder="Nome do cliente" required>
+        
+            <label for="orcamentoStatusUpdate">Status:</label>
+            <input type="text" id="orcamentoStatusUpdate" placeholder="Status do orçamento" required>
+        
+            <button type="submit">Atualizar Orçamento</button>
+        </form>
+
+        <div id="orcamentoInfo" class="orcamento-info" style="display:none;">
+            <h2>Informações do Orçamento</h2>
+            <p><strong>ID:</strong> <span id="orcamentoIdInfo"></span></p>
+            <p><strong>Descrição:</strong> <span id="orcamentoDescricaoInfo"></span></p>
+            <p><strong>Valor Estimado:</strong> <span id="orcamentoValorEstimadoInfo"></span></p>
+            <p><strong>Prazo (dias):</strong> <span id="orcamentoPrazoDiasInfo"></span></p>
+            <p><strong>Cliente:</strong> <span id="orcamentoClienteInfo"></span></p>
+            <p><strong>Status:</strong> <span id="orcamentoStatusInfo"></span></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Marcio Ramos. Todos os direitos reservados.</p>
+        <p>
+            <a href="#">Sobre</a>
+            <a href="#">Política de Privacidade</a>
+            <a href="mailto:email@provedor.com.br?subject=Assunto do email&cc=copia@provedor.com.br&bcc=copiaoculta@provedor.com.br&body=Conteúdo do email que será preenchido automaticamente">Contato</a>
+        </p>
+    </footer>
+
+   <script src="scripts/atualizartemporeal-orcamento.js"></script>
+
+</body>
+</html>
